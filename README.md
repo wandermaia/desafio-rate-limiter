@@ -17,10 +17,10 @@ O objetivo deste desafio é criar um rate limiter em Go que possa ser utilizado 
 
 - **Endereço IP:** O rate limiter deve restringir o número de requisições recebidas de um único endereço IP dentro de um intervalo de tempo definido.
 
-- **Token de Acesso:** O rate limiter deve também poderá limitar as requisições baseadas em um token de acesso único, permitindo diferentes limites de tempo de expiração para diferentes tokens. O Token deve ser informado no header no seguinte formato:
+- **Token de Acesso:** O rate limiter também poderá limitar as requisições baseadas em um token de acesso único, permitindo diferentes limites de tempo de expiração para diferentes tokens. O Token deve ser informado no header no seguinte formato:
     - **API_KEY:** \<TOKEN\>
 
-- As configurações de limite do token de acesso devem se sobrepor as do IP. Ex: Se o limite por IP é de 10 req/s e a de um determinado token é de 100 req/s, o rate limiter deve utilizar as informações do token.
+- As configurações de limite do **token de acesso devem se sobrepor as do IP**. Ex: Se o limite por IP é de 10 req/s e a de um determinado token é de 100 req/s, o rate limiter deve utilizar as informações do token.
 
 ### Requisitos
 
@@ -58,7 +58,7 @@ O objetivo deste desafio é criar um rate limiter em Go que possa ser utilizado 
 
 - Teste seu rate limiter sob diferentes condições de carga para garantir que ele funcione conforme esperado em situações de alto tráfego.
 
-### Entrega
+## Entrega
 
 - O código-fonte completo da implementação.
 
@@ -71,6 +71,14 @@ O objetivo deste desafio é criar um rate limiter em Go que possa ser utilizado 
 - O servidor web deve responder na porta 8080.
 
 ## Execução do Desafio
+
+- Criar o servidor web
+
+- Implementar autenticação com token
+
+- Criar o rate limite 
+
+- Teste implementar a redis
 
 ## Referências
 
