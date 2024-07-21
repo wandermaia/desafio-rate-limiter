@@ -36,8 +36,8 @@ services:
     #   MONGO_INITDB_ROOT_PASSWORD: admin
     ports:
       - "27017:27017"
-    volumes:
-      - ./docker/volumes/mongoDB:/data/db
+    # volumes:
+    #   - ./docker/volumes/mongoDB:/data/db
 
   mongo-express:
     container_name: mongo-express

@@ -45,7 +45,7 @@ func (ar AlbumRepositoryMongo) CreateAlbum(ctx context.Context, albumEntity *alb
 	// Inserindo os dados no mongo
 	_, err := ar.Collection.InsertOne(ctx, albumEntityMongo)
 	if err != nil {
-		log.Printf("Erro ao tentar inserir no mongodb: %s", err)
+		log.Print(err)
 		return err
 	}
 
@@ -59,7 +59,7 @@ func (ar AlbumRepositoryMongo) DeleteAlbumByID(ctx context.Context, id string) e
 	filter := bson.M{"_id": id}
 
 	if _, err := ar.Collection.DeleteOne(ctx, filter); err != nil {
-		log.Printf("Erro ao deletar o objeto ID %s no mongodb: %s", id, err)
+		log.Print(err)
 		return err
 	}
 

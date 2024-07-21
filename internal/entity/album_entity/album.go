@@ -30,7 +30,7 @@ func CreateAlbum(title, artist string, price float64) (*Album, error) {
 	return album, nil
 }
 
-// Valida se as propriedades do álbum estão definidas conrretamente.
+// Valida se as propriedades do álbum estão definidas corretamente.
 func (al *Album) Validate() error {
 	if len(al.Title) <= 2 || len(al.Artist) <= 2 || al.Price <= 0.1 {
 		return fmt.Errorf("invalid object")

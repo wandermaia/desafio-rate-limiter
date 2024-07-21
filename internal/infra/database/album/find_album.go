@@ -17,7 +17,7 @@ func (ar AlbumRepositoryMongo) FindAllAlbums(ctx context.Context) ([]album_entit
 	// Cursor para recuperar todos os albuns
 	cursor, err := ar.Collection.Find(ctx, filter)
 	if err != nil {
-		log.Printf("Erro ao realizar a busca no MongoDB: %s", err)
+		log.Print(err)
 		return nil, err
 	}
 
@@ -26,7 +26,7 @@ func (ar AlbumRepositoryMongo) FindAllAlbums(ctx context.Context) ([]album_entit
 	// Variável para receber os dados coletados
 	var albumsMongo []AlbumEntityMongo
 	if err := cursor.All(ctx, &albumsMongo); err != nil {
-		log.Printf("Erro ao realizar o decode dos dados do mongo %s", err)
+		log.Print(err)
 		return nil, err
 	}
 
@@ -54,7 +54,7 @@ func (ar AlbumRepositoryMongo) FindAlbumById(ctx context.Context, id string) (*a
 	// Realizando a pesquisa do dados
 	var albumEntityMongo AlbumEntityMongo
 	if err := ar.Collection.FindOne(ctx, filter).Decode(&albumEntityMongo); err != nil {
-		log.Printf("Erro ao realizar a busca no mongo pelo ID: %s", err)
+		log.Print(err)
 		return nil, err
 	}
 
