@@ -11,14 +11,14 @@ import (
 
 // Constantes contendo as chaves que serão buscadas nas variáveis de ambiente
 const (
-	MONGODB_URL = "MONGODB_URL"
-	MONGODB_DB  = "MONGODB_DB"
+	mongoDbUrl = "MONGODB_URL"
+	mongoDb    = "MONGODB_DB"
 )
 
 // Cria uma nova conexão ao mongo com base nas configurações de URL
 func NewMongoDBConnection(ctx context.Context) (*mongo.Database, error) {
-	mongoURL := os.Getenv(MONGODB_URL)
-	mongoDatabase := os.Getenv(MONGODB_DB)
+	mongoURL := os.Getenv(mongoDbUrl)
+	mongoDatabase := os.Getenv(mongoDb)
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURL))
 	if err != nil {

@@ -2,7 +2,9 @@ package album_usecase
 
 import (
 	"context"
+	"encoding/json"
 	"log"
+	"time"
 
 	"github.com/wandermaia/desafio-rate-limiter/internal/entity/album_entity"
 )
@@ -22,10 +24,23 @@ type AlbumOutputDTO struct {
 	Price  float64 `json:"price"`
 }
 
+const (
+	AlbumPrefixKeyCache = "album_"
+	CacheTTL            = "ALBUM_CACHE_TTL_SECONDS" // Nome da chave da variável de ambiente
+)
+
+// Password: os.Getenv(ALBUM_CACHE_TTL_SECONDS),
+// UseCase para o Album. Utiliza uma interface do repository para manter o desacoplamento
+type AlbumUseCase struct {
+	albumRepositoryInterface album_entity.AlbumRepositoryInterface
+	albumCacheInterface      album_entity.CacheInterface
+}
+
 // Função "Construtora"
-func NewAlbumUseCase(albumReporyInterface album_entity.AlbumRepositoryInterface) AlbumUseCaseInterface {
+func NewAlbumUseCase(albumReporyInterface album_entity.AlbumRepositoryInterface, cacheInterface album_entity.CacheInterface) AlbumUseCaseInterface {
 	return &AlbumUseCase{
 		albumRepositoryInterface: albumReporyInterface,
+		albumCacheInterface:      cacheInterface,
 	}
 }
 
@@ -49,12 +64,13 @@ func (auc *AlbumUseCase) CreateNewAlbum(ctx context.Context, albumInput *AlbumIn
 		return err
 	}
 
-	return nil
-}
+	//Salvando o album no cache
+	err = auc.saveAlbumCache(album)
+	if err != nil {
+		log.Printf("Error writing Album to cache: %s", err)
+	}
 
-// UseCase para o Album. Utiliza uma interface do repository para manter o desacoplamento
-type AlbumUseCase struct {
-	albumRepositoryInterface album_entity.AlbumRepositoryInterface
+	return nil
 }
 
 // Listar todos os álbuns
@@ -84,10 +100,26 @@ func (auc *AlbumUseCase) GetAllAlbums(ctx context.Context) ([]AlbumOutputDTO, er
 // Recuperar os dados de um álbum pelo ID
 func (auc *AlbumUseCase) GetAlbumByID(ctx context.Context, id string) (*AlbumOutputDTO, error) {
 
-	// Recuperando a entidade pelo id informado
-	albumEntity, err := auc.albumRepositoryInterface.FindAlbumById(ctx, id)
+	// Verificando se o album existe no cache
+	// se não existir, pesquisar no banco e salva no cache
+	albumEntity, err := auc.searchAlbumCache(id)
 	if err != nil {
-		return nil, err
+
+		//Registrando a busca no cache
+		log.Printf("Error retrieving album from cache: %s", err)
+
+		// Buscando os dados no repositorio
+		albumEntity, err = auc.albumRepositoryInterface.FindAlbumById(ctx, id)
+		if err != nil {
+			log.Printf("Error retrieving album from repository: %s", err)
+			return nil, err
+		}
+
+		//Salvando o album no cache
+		err = auc.saveAlbumCache(albumEntity)
+		if err != nil {
+			log.Printf("Error writing Album to cache: %s", err)
+		}
 	}
 
 	// Retornando os dados encontrados
@@ -101,5 +133,53 @@ func (auc *AlbumUseCase) GetAlbumByID(ctx context.Context, id string) (*AlbumOut
 
 // Deleta um album do ID informado
 func (auc *AlbumUseCase) DeleteAlbumByID(ctx context.Context, id string) error {
+
+	//Salvando o album no cache
+	err := auc.deleteAlbumCache(id)
+	if err != nil {
+		log.Printf("Error when deleting album from cache: %s", err)
+	}
+
+	// Deletando o álbum do repositório
 	return auc.albumRepositoryInterface.DeleteAlbumByID(ctx, id)
+}
+
+// Pesquisa do album no cache
+func (auc *AlbumUseCase) searchAlbumCache(id string) (*album_entity.Album, error) {
+
+	// Entidade para receber os dados, caso esteja no cache
+	var albumEntity album_entity.Album
+
+	// Recuperação dos dados no cache
+	key := AlbumPrefixKeyCache + id
+	albumJson, err := auc.albumCacheInterface.Get(key)
+	if err != nil {
+		return &album_entity.Album{}, err
+	}
+
+	// Realizando o unmarshall e retornando a entidade
+	err = json.Unmarshal([]byte(albumJson), &albumEntity)
+	return &albumEntity, err
+}
+
+// Inclusão de album no cache
+func (auc *AlbumUseCase) saveAlbumCache(album *album_entity.Album) error {
+
+	// Criando a chave
+	key := AlbumPrefixKeyCache + album.Id
+	AlbumJson, err := json.Marshal(album)
+	if err != nil {
+		return err
+	}
+
+	//Gravando no cache com tempo de vida de 60 segundos
+	return auc.albumCacheInterface.Set(key, string(AlbumJson), time.Second*60)
+}
+
+// Deletando o objeto do cache com base no ID
+func (auc *AlbumUseCase) deleteAlbumCache(id string) error {
+
+	// Criando a chave de buscas pelo id e deletando do cache
+	key := AlbumPrefixKeyCache + id
+	return auc.albumCacheInterface.Delete(key)
 }

@@ -82,3 +82,25 @@ O objetivo deste desafio é criar um rate limiter em Go que possa ser utilizado 
 
 ## Referências
 
+https://github.com/go-redis/redis_rate
+
+
+Middlewares
+
+https://gin-gonic.com/zh-tw/docs/examples/using-middleware/
+
+
+https://pt.stackoverflow.com/questions/574251/como-fazer-autoriza%C3%A7%C3%A3o-com-middleware-gin-gonic-go
+
+Cache redis
+
+https://www.youtube.com/watch?v=az_9wwhnLhk
+
+https://github.com/piovani/aula
+
+JWT
+
+https://www.youtube.com/watch?v=myIJZMxpfTE&list=PLtoVuM73AmsKnUvoFizEmvWo0BbegkSIG&index=13
+
+https://github.com/victorsteven/gophercon-jwt-repo
+

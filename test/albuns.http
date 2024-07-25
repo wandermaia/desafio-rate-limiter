@@ -41,14 +41,22 @@ Content-Type: application/json
 ###
 
 # Exemplo de pesquisa álbum pelo ID
-GET http://localhost:8080/album/a550b720-8c4b-4b22-860a-7417229a5332
+GET http://localhost:8080/album/ecbcb529-e6ce-4fee-b89f-bf62b3aa2273
 Content-Type: application/json
 
 ###
 
 # Exemplo de delete álbum pelo id
-DELETE http://localhost:8080/album/5047498b-422e-4f2a-bba9-a84007c130ac
+DELETE http://localhost:8080/album/11f778ce-921b-4518-8bc9-05057c641127
 Content-Type: application/json
 
 ###
 
+# Exemplo de criação de token
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  	"Username": "username2",
+	"Password": "password"
+}
