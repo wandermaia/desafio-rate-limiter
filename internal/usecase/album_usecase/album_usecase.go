@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/wandermaia/desafio-rate-limiter/internal/entity/album_entity"
+	"github.com/wandermaia/desafio-rate-limiter/internal/infra/cache"
 )
 
 // Dados de entrada
@@ -33,13 +34,13 @@ const (
 // UseCase para o Album. Utiliza uma interface do repository para manter o desacoplamento
 type AlbumUseCase struct {
 	albumRepositoryInterface album_entity.AlbumRepositoryInterface
-	albumCacheInterface      album_entity.CacheInterface
+	albumCacheInterface      cache.CacheInterface
 }
 
 // Função "Construtora"
-func NewAlbumUseCase(albumReporyInterface album_entity.AlbumRepositoryInterface, cacheInterface album_entity.CacheInterface) AlbumUseCaseInterface {
+func NewAlbumUseCase(albumRepoInterface album_entity.AlbumRepositoryInterface, cacheInterface cache.CacheInterface) AlbumUseCaseInterface {
 	return &AlbumUseCase{
-		albumRepositoryInterface: albumReporyInterface,
+		albumRepositoryInterface: albumRepoInterface,
 		albumCacheInterface:      cacheInterface,
 	}
 }

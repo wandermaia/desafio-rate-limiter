@@ -13,6 +13,7 @@ import (
 	"github.com/wandermaia/desafio-rate-limiter/internal/infra/cache"
 	database "github.com/wandermaia/desafio-rate-limiter/internal/infra/database/album"
 	"github.com/wandermaia/desafio-rate-limiter/internal/usecase/album_usecase"
+	"github.com/wandermaia/desafio-rate-limiter/internal/usecase/authentication_usecase"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -47,10 +48,10 @@ func main() {
 	router := gin.Default()
 
 	//userController, bidController, auctionsController := initDependencies(databaseConnection)
-	albumHandler := initDependencies(mongoConnection, redisConnection)
+	accessHandler, albumHandler := initDependencies(mongoConnection, redisConnection)
 
 	// Definindo as rotas e inicializando o server
-	router.POST("/login", handler.Login)
+	router.POST("/login", accessHandler.Login)
 	router.POST("/album", albumHandler.CreateAlbum)
 	router.GET("/album/:albumId", albumHandler.FindAlbumById)
 	router.GET("/album", albumHandler.FindAllAlbums)
@@ -59,7 +60,7 @@ func main() {
 }
 
 // Função para inicializar as dependências e retornar o handler nomeado albumHandler
-func initDependencies(mongoDB *mongo.Database, redisDB *redis.Client) (albumHandler *handler.AlbumHandler) {
+func initDependencies(mongoDB *mongo.Database, redisDB *redis.Client) (accessHandler *handler.AccessHandler, albumHandler *handler.AlbumHandler) {
 
 	// Criando o repositorio para o mongo
 	albumRepository := database.NewAlbumRepository(mongoDB)
@@ -67,9 +68,10 @@ func initDependencies(mongoDB *mongo.Database, redisDB *redis.Client) (albumHand
 	// Criando o cache utilizando o redis
 	cacheRedis := cache.NewCacheRedis(redisDB)
 
-	// Criando o Usecase
+	// Criando os Usecases
 	albumHandler = handler.NewAlbumHandler(album_usecase.NewAlbumUseCase(albumRepository, cacheRedis))
+	accessHandler = handler.NewAccessHandler(authentication_usecase.NewAuthenticationUseCase(cacheRedis))
 
-	// Retorno da função. Como a variável já está nomeada na definição da função, não é necessário passar o nome aqui.
+	// Retorno da função. Como as variáveis já estão nomeadas na definição da função, não é necessário passar o nome aqui.
 	return
 }

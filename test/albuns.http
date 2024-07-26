@@ -1,3 +1,14 @@
+# Exemplo de criação de token
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  	"Username": "username",
+	"Password": "password"
+}
+
+###
+
 # Exemplo de pesquisa álbuns
 GET http://localhost:8080/album
 Content-Type: application/json
@@ -52,11 +63,3 @@ Content-Type: application/json
 
 ###
 
-# Exemplo de criação de token
-POST http://localhost:8080/login
-Content-Type: application/json
-
-{
-  	"Username": "username2",
-	"Password": "password"
-}
