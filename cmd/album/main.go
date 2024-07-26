@@ -52,10 +52,12 @@ func main() {
 
 	// Definindo as rotas e inicializando o server
 	router.POST("/login", accessHandler.Login)
-	router.POST("/album", albumHandler.CreateAlbum)
-	router.GET("/album/:albumId", albumHandler.FindAlbumById)
-	router.GET("/album", albumHandler.FindAllAlbums)
-	router.DELETE("/album/:albumId", albumHandler.DeleteAlbumByID)
+	router.POST("/logout", accessHandler.Logout)
+	router.GET("/health", accessHandler.Health)
+	router.POST("/album", handler.TokenAuthMiddleware(), albumHandler.CreateAlbum)
+	router.GET("/album/:albumId", handler.TokenAuthMiddleware(), albumHandler.FindAlbumById)
+	router.GET("/album", handler.TokenAuthMiddleware(), albumHandler.FindAllAlbums)
+	router.DELETE("/album/:albumId", handler.TokenAuthMiddleware(), albumHandler.DeleteAlbumByID)
 	router.Run(":8080")
 }
 

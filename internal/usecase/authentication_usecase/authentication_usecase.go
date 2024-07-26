@@ -82,18 +82,39 @@ func (auc AuthenticationUseCase) CreateToken(userid uint64) (*TokenDetailsDTO, e
 }
 
 // Função para criar a autenticação do token
-func (auc AuthenticationUseCase) CreateAuth(userid uint64, td *TokenDetailsDTO) error {
-	at := time.Unix(td.AtExpires, 0) //converting Unix to UTC(to Time object)
-	rt := time.Unix(td.RtExpires, 0)
+func (auc AuthenticationUseCase) CreateAuth(userid uint64, tokenDetailsDTO *TokenDetailsDTO) error {
+
+	// Convertendo os tempos de expiração para UTC
+	accesstoken := time.Unix(tokenDetailsDTO.AtExpires, 0)
+	refreshToken := time.Unix(tokenDetailsDTO.RtExpires, 0)
 	now := time.Now()
 
-	err := auc.authenticationCacheInterface.Set(td.AccessUuid, strconv.Itoa(int(userid)), at.Sub(now))
+	// Inserindo os dados no cache
+	err := auc.authenticationCacheInterface.Set(tokenDetailsDTO.AccessUuid, strconv.Itoa(int(userid)), accesstoken.Sub(now))
 	if err != nil {
 		return err
 	}
-	errRefresh := auc.authenticationCacheInterface.Set(td.RefreshUuid, strconv.Itoa(int(userid)), rt.Sub(now))
+	errRefresh := auc.authenticationCacheInterface.Set(tokenDetailsDTO.RefreshUuid, strconv.Itoa(int(userid)), refreshToken.Sub(now))
 	if errRefresh != nil {
 		return errRefresh
+	}
+	return nil
+}
+
+func (auc AuthenticationUseCase) GetAuthByAccessUuid(accessUuid string) (string, error) {
+
+	userId, err := auc.authenticationCacheInterface.Get(accessUuid)
+	if err != nil {
+		return "", err
+	}
+
+	return userId, nil
+}
+
+func (auc AuthenticationUseCase) DeleteAuth(givenUuid string) error {
+	err := auc.authenticationCacheInterface.Delete(givenUuid)
+	if err != nil {
+		return err
 	}
 	return nil
 }

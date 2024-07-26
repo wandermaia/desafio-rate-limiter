@@ -4,4 +4,6 @@ package authentication_usecase
 type AuthenticationUseCaseInterface interface {
 	CreateToken(userid uint64) (*TokenDetailsDTO, error)
 	CreateAuth(userid uint64, td *TokenDetailsDTO) error
+	GetAuthByAccessUuid(accessUuid string) (string, error)
+	DeleteAuth(givenUuid string) error
 }
