@@ -1,14 +1,36 @@
+# Criação de token
+POST http://localhost:8080/token
+Content-Type: application/json
+
+{
+  	"Username": "username",
+	"Password": "password"
+}
+
+
+###
+
 # Exemplo de pesquisa álbuns
 GET http://localhost:8080/album
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImZjMGU2NDZmLTdkNjEtNDg3MS04NDE2LWJhMGZlMTBhZGNmNyIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjAyNzgwNSwidXNlcl9pZCI6MX0.ZVBgDI6pJ6ncFey0Z9pgdo_TKOldirud4aXP912U408
-
+#Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImExMDY3MjI2LTk1NDItNDNlNC1iOTY1LTMwYTY1MDE2MmNhMSIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjE3NTk2NywidXNlcl9pZCI6MX0.ycLL2OUnk3do6HchWicI1AWLxFxnQyHGKgivPe0oIIc
+API_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImEzM2I4OGRlLTliM2QtNDAxMC1hODM4LTU2NjcxZGZlMzliOCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjE3NjAzNiwidXNlcl9pZCI6MX0.DD8MUpJIvmyVpjpoYs8eZ6mc81LSQC7UGxfmMdXCgf0
 ###
+
+
+# Exemplo de pesquisa álbum pelo ID
+GET http://localhost:8080/album/5758eab0-6b4f-449d-b065-8ba11d9d781c
+Content-Type: application/json
+#Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6IjA0MjM4NGI3LTVjOTgtNDkzMC04Zjc1LTQ4Mjg0OTM5YTNiOSIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjE3NTE5NSwidXNlcl9pZCI6MX0.-1BrqZx-HAxRQIs45s30-4OITG_O5z8yg8kAA3kiMSc
+API_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImEzM2I4OGRlLTliM2QtNDAxMC1hODM4LTU2NjcxZGZlMzliOCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjE3NjAzNiwidXNlcl9pZCI6MX0.DD8MUpJIvmyVpjpoYs8eZ6mc81LSQC7UGxfmMdXCgf0
+###
+
 
 # Exemplo de Criação de álbum
 POST http://localhost:8080/album
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImEwNWI5N2E3LTRmN2UtNDBlYy1hNDdjLWE0OGE3NTMzYzk3ZSIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjAyMTQ3OCwidXNlcl9pZCI6MX0.L4BcndEJRcmV6ymPvex_T2VJA0iYosUmAyHzR5HKzZ0
+#Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImNiMzA1NjNhLTVhODctNDlkMy1hMjE4LWVjZWQzMGE2ODE0NCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjE3MzM1NywidXNlcl9pZCI6MX0.ZK62jv0WU5Dg-JTLJ_AHNvMFnt_0T1nILrAivX2OSf8
+API_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImEzM2I4OGRlLTliM2QtNDAxMC1hODM4LTU2NjcxZGZlMzliOCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjE3NjAzNiwidXNlcl9pZCI6MX0.DD8MUpJIvmyVpjpoYs8eZ6mc81LSQC7UGxfmMdXCgf0
 
 {
 	"title": "Led Zeppelin IV",
@@ -21,6 +43,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6I
 # Exemplo de Criação de álbum
 POST http://localhost:8080/album
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImNiMzA1NjNhLTVhODctNDlkMy1hMjE4LWVjZWQzMGE2ODE0NCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjE3MzM1NywidXNlcl9pZCI6MX0.ZK62jv0WU5Dg-JTLJ_AHNvMFnt_0T1nILrAivX2OSf8
 
 {
 	"title": "Train of Thought",
@@ -33,6 +56,7 @@ Content-Type: application/json
 # Exemplo de Criação de álbum
 POST http://localhost:8080/album
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImNiMzA1NjNhLTVhODctNDlkMy1hMjE4LWVjZWQzMGE2ODE0NCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjE3MzM1NywidXNlcl9pZCI6MX0.ZK62jv0WU5Dg-JTLJ_AHNvMFnt_0T1nILrAivX2OSf8
 
 {
 	"title": "Machine Head",
@@ -42,15 +66,13 @@ Content-Type: application/json
 
 ###
 
-# Exemplo de pesquisa álbum pelo ID
-GET http://localhost:8080/album/ecbcb529-e6ce-4fee-b89f-bf62b3aa2273
-Content-Type: application/json
 
-###
 
 # Exemplo de delete álbum pelo id
 DELETE http://localhost:8080/album/11f778ce-921b-4518-8bc9-05057c641127
 Content-Type: application/json
+#Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImNiMzA1NjNhLTVhODctNDlkMy1hMjE4LWVjZWQzMGE2ODE0NCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjE3MzM1NywidXNlcl9pZCI6MX0.ZK62jv0WU5Dg-JTLJ_AHNvMFnt_0T1nILrAivX2OSf8
+API_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImEzM2I4OGRlLTliM2QtNDAxMC1hODM4LTU2NjcxZGZlMzliOCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjE3NjAzNiwidXNlcl9pZCI6MX0.DD8MUpJIvmyVpjpoYs8eZ6mc81LSQC7UGxfmMdXCgf0
 
 ###
 
@@ -58,29 +80,15 @@ Content-Type: application/json
 GET http://localhost:8080/health
 Content-Type: application/json
 
-{
-  	"Username": "username",
-	"Password": "password"
-}
-
 
 ###
 
-# Exemplo de criação de token
-POST http://localhost:8080/login
-Content-Type: application/json
 
-{
-  	"Username": "username",
-	"Password": "password"
-}
-
-
-###
-# Exemplo de todo
+# Exemplo do endpoint de health
 GET http://localhost:8080/health
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImEwNWI5N2E3LTRmN2UtNDBlYy1hNDdjLWE0OGE3NTMzYzk3ZSIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjAyMTQ3OCwidXNlcl9pZCI6MX0.L4BcndEJRcmV6ymPvex_T2VJA0iYosUmAyHzR5HKzZ0
+#Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImNiMzA1NjNhLTVhODctNDlkMy1hMjE4LWVjZWQzMGE2ODE0NCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjE3MzM1NywidXNlcl9pZCI6MX0.ZK62jv0WU5Dg-JTLJ_AHNvMFnt_0T1nILrAivX2OSf8
+API_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImEzM2I4OGRlLTliM2QtNDAxMC1hODM4LTU2NjcxZGZlMzliOCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjE3NjAzNiwidXNlcl9pZCI6MX0.DD8MUpJIvmyVpjpoYs8eZ6mc81LSQC7UGxfmMdXCgf0
 
 {
   	"user_id": 1,
@@ -92,7 +100,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6I
 # Exemplo de logout
 POST http://localhost:8080/logout
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImEwNWI5N2E3LTRmN2UtNDBlYy1hNDdjLWE0OGE3NTMzYzk3ZSIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjAyMTQ3OCwidXNlcl9pZCI6MX0.L4BcndEJRcmV6ymPvex_T2VJA0iYosUmAyHzR5HKzZ0
+#Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImNiMzA1NjNhLTVhODctNDlkMy1hMjE4LWVjZWQzMGE2ODE0NCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjE3MzM1NywidXNlcl9pZCI6MX0.ZK62jv0WU5Dg-JTLJ_AHNvMFnt_0T1nILrAivX2OSf8
+API_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImEzM2I4OGRlLTliM2QtNDAxMC1hODM4LTU2NjcxZGZlMzliOCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjE3NjAzNiwidXNlcl9pZCI6MX0.DD8MUpJIvmyVpjpoYs8eZ6mc81LSQC7UGxfmMdXCgf0
 
 ###
 # Exemplo de refresh token
@@ -100,9 +109,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6I
 # no body
 POST http://localhost:8080/token/refresh
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6IjllNGZhOTRkLTNlMDgtNGVkMC1iZTUzLTQxOTQ0NDMxMTJlNCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMTczMTkyNiwidXNlcl9pZCI6MX0.zgW3HfsCbc9XGEwKyLb1KhElzUOQH0xsieZ2S_-L1AA
+#Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6IjllNGZhOTRkLTNlMDgtNGVkMC1iZTUzLTQxOTQ0NDMxMTJlNCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMTczMTkyNiwidXNlcl9pZCI6MX0.zgW3HfsCbc9XGEwKyLb1KhElzUOQH0xsieZ2S_-L1AA
+API_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6IjBhNzI0ZWI0LWIzYTMtNDZhZi04ZDg5LWUxZTMxMjg5MzM3OCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjE3NjE2NCwidXNlcl9pZCI6MX0.6bEkOifla7rFp2hI4pG-pxHUvyMP6ft7PN6Odo8mRm0
 
 {
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6IjllNGZhOTRkLTNlMDgtNGVkMC1iZTUzLTQxOTQ0NDMxMTJlNCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMTczMTkyNiwidXNlcl9pZCI6MX0.zgW3HfsCbc9XGEwKyLb1KhElzUOQH0xsieZ2S_-L1AA",
-  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjIzMzU4MjYsInJlZnJlc2hfdXVpZCI6IjQxZDAwY2VmLTkxNmEtNDVlNC04ZDU3LThkODdmNmMzNGU1NyIsInVzZXJfaWQiOjF9.oJqLq9kCeVZ2bnWwi7oj_N3FtJDkBO-bHNgHjhjinBI"
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NfdXVpZCI6ImMwMzlkNDA4LWRiNDUtNGE2YS1hNjRkLWIwM2IzMmVlNzVkZCIsImF1dGhvcml6ZWQiOnRydWUsImV4cCI6MTcyMjE3NjM4NCwidXNlcl9pZCI6MX0.x9Z_EPk5UPeHzoeVqHHnS9Qt6GunmuFQwInT11J1Zsc",
+  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjI3ODAyODQsInJlZnJlc2hfdXVpZCI6ImY2YWEzNmIwLTJjNjctNDk2Zi1iOGFhLWRhMTVkZGQ2NGI3MiIsInVzZXJfaWQiOjF9.j2z3C3LLQac2bojZfyzvRaSkY2qxlApueQdMomzD8RA"
 }

@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/wandermaia/desafio-rate-limiter/internal/usecase/authentication_usecase"
+	tokenutils "github.com/wandermaia/desafio-rate-limiter/pkg/tokenUtils"
 )
 
 // Handler de albuns
@@ -48,7 +48,7 @@ type AccessDetails struct {
 }
 
 // Função para autenticar o usuário
-func (ah AccessHandler) Login(c *gin.Context) {
+func (ah AccessHandler) CreateAccessToken(c *gin.Context) {
 
 	// Usuário enviado na requisição para geração de token
 	var userRequest User
@@ -90,7 +90,7 @@ func (ah AccessHandler) Login(c *gin.Context) {
 func (ah AccessHandler) Logout(ctx *gin.Context) {
 
 	// Validando o token
-	token := ExtractToken(ctx.Request)
+	token := tokenutils.ExtractToken(ctx.Request)
 	if token == "" {
 		ctx.JSON(http.StatusUnauthorized, "unauthorized")
 		return
@@ -115,82 +115,41 @@ func (ah AccessHandler) Logout(ctx *gin.Context) {
 // Função para teste
 func (ah AccessHandler) Health(ctx *gin.Context) {
 
-	token := ExtractToken(ctx.Request)
-	if token == "" {
-		ctx.JSON(http.StatusUnauthorized, "unauthorized")
-		return
-	}
+	// // Extraindo o token da request
+	// token := tokenutils.ExtractToken(ctx.Request)
+	// if token == "" {
+	// 	ctx.JSON(http.StatusUnauthorized, "unauthorized")
+	// 	return
+	// }
 
-	// Extraindo os metadados do token
-	tokenAuth, err := ExtractTokenMetadata(token)
-	if err != nil {
-		ctx.JSON(http.StatusUnauthorized, "unauthorized")
-		return
-	}
+	// // Extraindo os metadados do token
+	// tokenAuth, err := ExtractTokenMetadata(token)
+	// if err != nil {
+	// 	ctx.JSON(http.StatusUnauthorized, "unauthorized")
+	// 	return
+	// }
 
-	// Verificando a autenticação
-	userId, err := ah.FetchAuth(tokenAuth)
-	if err != nil {
-		ctx.JSON(http.StatusUnauthorized, "unauthorized")
-		return
-	}
+	// // Verificando a autenticação
+	// userId, err := ah.FetchAuth(tokenAuth)
+	// if err != nil {
+	// 	ctx.JSON(http.StatusUnauthorized, "unauthorized")
+	// 	return
+	// }
 
 	// Segregando apenas os tokens para retornar ao usuário
 	health := map[string]string{
-		"status":  "health",
-		"user_id": string(userId),
+		"status": "health",
+		// "user_id": string(userId),
 	}
 
 	ctx.JSON(http.StatusOK, health)
 }
 
-// Função para extrair o token a partir do header
-func ExtractToken(r *http.Request) string {
-
-	// Coletando o header que contem a chave Authorization e segregando a parte do token
-	bearToken := r.Header.Get("Authorization")
-	strArr := strings.Split(bearToken, " ")
-	if len(strArr) == 2 {
-		return strArr[1]
-	}
-	return ""
-}
-
-// Verifica token
-func VerifyToken(tokenString string) (*jwt.Token, error) {
-
-	// Verificando se o token é válido
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-
-		// Validando a assinatura
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return []byte(os.Getenv("ACCESS_SECRET")), nil
-	})
-	if err != nil {
-		return nil, err
-	}
-	return token, nil
-}
-
-// Validação do token
-func TokenValid(tokenString string) error {
-	token, err := VerifyToken(tokenString)
-	if err != nil {
-		return err
-	}
-
-	if token.Claims.Valid() != nil || !token.Valid {
-		return err
-	}
-
-	return nil
-}
-
 // Extrai os metadados do token
 func ExtractTokenMetadata(tokenString string) (*AccessDetails, error) {
-	token, err := VerifyToken(tokenString)
+
+	// Verificando se o token é válido e se nãoe stá expirado
+	token, err := tokenutils.VerifyToken(tokenString)
 	if err != nil {
 		return nil, err
 	}
@@ -225,29 +184,8 @@ func (ah AccessHandler) FetchAuth(authD *AccessDetails) (uint64, error) {
 	return userID, nil
 }
 
-// Midleware para incluir a autenticação nas rotas
-func TokenAuthMiddleware() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-
-		// Validando o token
-		token := ExtractToken(ctx.Request)
-		if token == "" {
-			ctx.JSON(http.StatusUnauthorized, "unauthorized")
-			ctx.Abort()
-			return
-		}
-		err := TokenValid(token)
-		if err != nil {
-			ctx.JSON(http.StatusUnauthorized, err.Error())
-			ctx.Abort()
-			return
-		}
-		ctx.Next()
-	}
-}
-
 // Realiza o refresh do token
-func (ah AccessHandler) Refresh(ctx *gin.Context) {
+func (ah AccessHandler) RefreshAccessToken(ctx *gin.Context) {
 
 	// Recuperando so tokens a partir do body
 	mapToken := map[string]string{}
@@ -296,13 +234,6 @@ func (ah AccessHandler) Refresh(ctx *gin.Context) {
 			ctx.JSON(http.StatusUnauthorized, "unauthorized")
 			return
 		}
-
-		//Create new pairs of refresh and access tokens
-		// ts, createErr := CreateToken(userId)
-		// if createErr != nil {
-		// 	ctx.JSON(http.StatusForbidden, createErr.Error())
-		// 	return
-		// }
 
 		//Invocando a função de criação de token
 		tokenDetailsDTO, err := ah.authenticationUseCase.CreateToken(userId)

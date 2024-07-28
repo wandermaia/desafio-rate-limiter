@@ -12,6 +12,7 @@ import (
 	"github.com/wandermaia/desafio-rate-limiter/internal/infra/api/handler"
 	"github.com/wandermaia/desafio-rate-limiter/internal/infra/cache"
 	database "github.com/wandermaia/desafio-rate-limiter/internal/infra/database/album"
+	auth_midlleware "github.com/wandermaia/desafio-rate-limiter/internal/middleware/auth_middleware"
 	"github.com/wandermaia/desafio-rate-limiter/internal/usecase/album_usecase"
 	"github.com/wandermaia/desafio-rate-limiter/internal/usecase/authentication_usecase"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -51,13 +52,14 @@ func main() {
 	accessHandler, albumHandler := initDependencies(mongoConnection, redisConnection)
 
 	// Definindo as rotas e inicializando o server
-	router.POST("/login", accessHandler.Login)
+	router.POST("/token", accessHandler.CreateAccessToken)
+	router.POST("/token/refresh", accessHandler.RefreshAccessToken)
 	router.POST("/logout", accessHandler.Logout)
 	router.GET("/health", accessHandler.Health)
-	router.POST("/album", handler.TokenAuthMiddleware(), albumHandler.CreateAlbum)
-	router.GET("/album/:albumId", handler.TokenAuthMiddleware(), albumHandler.FindAlbumById)
-	router.GET("/album", handler.TokenAuthMiddleware(), albumHandler.FindAllAlbums)
-	router.DELETE("/album/:albumId", handler.TokenAuthMiddleware(), albumHandler.DeleteAlbumByID)
+	router.POST("/album", auth_midlleware.TokenAuthMiddleware(), albumHandler.CreateAlbum)
+	router.GET("/album/:albumId", auth_midlleware.TokenAuthMiddleware(), albumHandler.FindAlbumById)
+	router.GET("/album", auth_midlleware.TokenAuthMiddleware(), albumHandler.FindAllAlbums)
+	router.DELETE("/album/:albumId", auth_midlleware.TokenAuthMiddleware(), albumHandler.DeleteAlbumByID)
 	router.Run(":8080")
 }
 

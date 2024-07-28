@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"os"
+	"strconv"
 	"time"
 
 	"github.com/wandermaia/desafio-rate-limiter/internal/entity/album_entity"
@@ -173,8 +175,17 @@ func (auc *AlbumUseCase) saveAlbumCache(album *album_entity.Album) error {
 		return err
 	}
 
-	//Gravando no cache com tempo de vida de 60 segundos
-	return auc.albumCacheInterface.Set(key, string(AlbumJson), time.Second*60)
+	//Gravando no cache com tempo de vida com base na variável de ambiente definda em CacheTTL
+	// Caso haja algum erro, o valor 60 será definido como padrão.
+	ttl, err := strconv.Atoi(os.Getenv(CacheTTL))
+	log.Printf("ttl cache value: %d", ttl)
+	if err != nil {
+		log.Printf("Error convert ttl string to int - %s", err)
+		ttl = 60
+	}
+
+	//return auc.albumCacheInterface.Set(key, string(AlbumJson), time.Second*60)
+	return auc.albumCacheInterface.Set(key, string(AlbumJson), time.Second*time.Duration(ttl))
 }
 
 // Deletando o objeto do cache com base no ID

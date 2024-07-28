@@ -22,7 +22,7 @@ type TokenDetailsDTO struct {
 
 const (
 	AlbumPrefixKeyCache = "token_"
-	CacheTTL            = "TOKEN_TTL_SECONDS" // Nome da chave da variável de ambiente
+	//TokenCacheTTL            = "TOKEN_TTL_SECONDS" // Nome da chave da variável de ambiente
 )
 
 // UseCase para a autenticação. Utiliza uma interface do cache para manter o desacoplamento
