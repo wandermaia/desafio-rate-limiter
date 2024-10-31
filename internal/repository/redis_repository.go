@@ -12,7 +12,7 @@ type RedisRepository struct {
 	client *redis.Client
 }
 
-// Função de inicizalização do repositório
+// Função de inicizalização do repositório do redis
 func NewRedisRepository(address, password string) *RedisRepository {
 	client := redis.NewClient(&redis.Options{
 		Addr:     address,
