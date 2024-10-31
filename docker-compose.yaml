@@ -1,0 +1,12 @@
+services:
+  redis:
+    container_name: redis
+    image: redis
+    command: redis-server --requirepass redis123
+    ports:
+      - "6379:6379"
+
+
+
+
+
