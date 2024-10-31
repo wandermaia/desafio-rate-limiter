@@ -6,6 +6,22 @@ services:
     ports:
       - "6379:6379"
 
+  rate-limiter:
+    container_name: rate-limiter
+    build:
+      context: .
+    # environment:
+    #   - SERVICE_B_URL=http://service-b:8282/
+    #   - REQUEST_NAME_OTEL=service-a-request
+    #   - OTEL_SERVICE_NAME=service-a
+    #   - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector:4317
+    #   - HTTP_PORT=:8181
+    ports:
+      - "8080:8080"
+    depends_on:
+      # - jaeger-all-in-one
+      # - prometheus
+      - redis
 
 
 
