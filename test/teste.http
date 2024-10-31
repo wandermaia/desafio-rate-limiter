@@ -1,0 +1,13 @@
+# Exemplo test
+GET http://localhost:8080/test
+Content-Type: application/json
+
+
+###
+
+# Exemplo do endpoint de test com token
+GET http://localhost:8080/test
+Content-Type: application/json
+API_KEY: abc123
+
+###
