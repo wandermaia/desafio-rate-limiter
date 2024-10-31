@@ -1,0 +1,28 @@
+
+Inicialização do módulo.
+
+```bash
+
+go mod init github.com/wandermaia/desafio-rate-limiter
+
+
+
+```
+
+
+Para remover todos os containers
+
+```bash
+
+docker rm -f $(docker ps -a -q)
+
+```
+
+docker-compose up --build -d
+
+
+
+docker logs --tail 100 rate-limiter
+
+
+docker logs --tail 3  -f rate-limiter

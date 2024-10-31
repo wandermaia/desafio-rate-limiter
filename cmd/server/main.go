@@ -15,7 +15,7 @@ import (
 func main() {
 	cfg, err := config.LoadConfig()
 	if err != nil {
-		log.Fatalf("could not load config: %v", err)
+		log.Fatalf("Erro ao carregar as configurações: %v", err)
 	}
 
 	repo := repository.NewRedisRepository(cfg.RedisAddress, cfg.RedisPassword)
@@ -26,12 +26,7 @@ func main() {
 	log.Printf("MaxRequestsPerSecond: %v BlockDuration: %v , MaxRequestsPerSecondToken: %v , BlockDurationToken: %v", cfg.MaxRequestsPerSecond, cfg.BlockDuration,
 		cfg.MaxRequestsPerSecondToken, cfg.BlockDurationToken)
 
-	r := gin.Default()
-
-	// recebe como parâmetro rate_limiter.RateLimiter, que é uma interface.
-	r.Use(middleware.RateLimiterMiddleware(limiter))
-
-	r.GET("/test", handler.TestHandler)
-
-	r.Run()
+	router := gin.Default()
+	router.GET("/test", middleware.RateLimiterMiddleware(limiter), handler.TestHandler)
+	router.Run(":8080")
 }
