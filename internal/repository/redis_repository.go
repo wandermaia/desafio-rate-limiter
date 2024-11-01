@@ -33,7 +33,7 @@ func (r *RedisRepository) Allow(ip string, token string, maxRequests int, durati
 	// Coletando o valor da chave
 	count, err := r.client.Get(ctx, key).Int()
 
-	// Caso a chave não exista, será retornoado o erro redis.Nil
+	// Caso a chave não exista, será retornado o erro redis.Nil
 	if err == redis.Nil {
 
 		//Criando a chave nova no redis

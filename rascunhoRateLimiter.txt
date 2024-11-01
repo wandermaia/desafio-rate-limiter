@@ -25,4 +25,4 @@ docker-compose up --build -d
 docker logs --tail 100 rate-limiter
 
 
-docker logs --tail 3  -f rate-limiter
+docker logs --tail 15  -f rate-limiter

@@ -10,17 +10,16 @@ services:
     container_name: rate-limiter
     build:
       context: .
-    # environment:
-    #   - SERVICE_B_URL=http://service-b:8282/
-    #   - REQUEST_NAME_OTEL=service-a-request
-    #   - OTEL_SERVICE_NAME=service-a
-    #   - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector:4317
-    #   - HTTP_PORT=:8181
+    environment:
+      MAX_REQUESTS_PER_SECOND: 5
+      BLOCK_DURATION: 60
+      MAX_REQUESTS_PER_SECOND_TOKEN: 10
+      BLOCK_DURATION_TOKEN: 60
+      REDIS_ADDRESS: "redis:6379"
+      REDIS_PASSWORD: "redis123"
     ports:
       - "8080:8080"
     depends_on:
-      # - jaeger-all-in-one
-      # - prometheus
       - redis
 
 

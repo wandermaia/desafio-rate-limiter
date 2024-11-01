@@ -1,11 +1,10 @@
 package main
 
 import (
-	"log"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/wandermaia/desafio-rate-limiter/internal/config"
+	"github.com/spf13/viper"
 	"github.com/wandermaia/desafio-rate-limiter/internal/handler"
 	"github.com/wandermaia/desafio-rate-limiter/internal/middleware"
 	"github.com/wandermaia/desafio-rate-limiter/internal/rate_limiter"
@@ -13,19 +12,24 @@ import (
 )
 
 func main() {
-	cfg, err := config.LoadConfig()
-	if err != nil {
-		log.Fatalf("Erro ao carregar as configurações: %v", err)
-	}
 
-	repo := repository.NewRedisRepository(cfg.RedisAddress, cfg.RedisPassword)
-	strategy := rate_limiter.NewRedisStrategy(repo, cfg.MaxRequestsPerSecond, time.Duration(cfg.BlockDuration)*time.Second,
-		cfg.MaxRequestsPerSecondToken, time.Duration(cfg.BlockDurationToken)*time.Second)
+	// Carregando as variáveis de ambiente
+	viper.AutomaticEnv()
+
+	// viper.Set("MAX_REQUESTS_PER_SECOND", 5)
+	// viper.Set("BLOCK_DURATION", 60)
+	// viper.Set("MAX_REQUESTS_PER_SECOND_TOKEN", 10)
+	// viper.Set("BLOCK_DURATION_TOKEN", 60)
+	// viper.Set("REDIS_ADDRESS", "localhost:6379")
+	// viper.Set("REDIS_PASSWORD", "redis123")
+
+	// Criação do repo, stratagey e limiter
+	repo := repository.NewRedisRepository(viper.GetString("REDIS_ADDRESS"), viper.GetString("REDIS_PASSWORD"))
+	strategy := rate_limiter.NewRedisStrategy(repo, viper.GetInt("MAX_REQUESTS_PER_SECOND"), time.Duration(viper.GetInt("BLOCK_DURATION"))*time.Second,
+		viper.GetInt("MAX_REQUESTS_PER_SECOND_TOKEN"), time.Duration(viper.GetInt("BLOCK_DURATION_TOKEN"))*time.Second)
 	limiter := rate_limiter.NewRateLimiter(strategy)
 
-	log.Printf("MaxRequestsPerSecond: %v BlockDuration: %v , MaxRequestsPerSecondToken: %v , BlockDurationToken: %v", cfg.MaxRequestsPerSecond, cfg.BlockDuration,
-		cfg.MaxRequestsPerSecondToken, cfg.BlockDurationToken)
-
+	// Criação do server
 	router := gin.Default()
 	router.GET("/test", middleware.RateLimiterMiddleware(limiter), handler.TestHandler)
 	router.Run(":8080")
