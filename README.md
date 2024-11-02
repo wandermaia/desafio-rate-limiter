@@ -70,5 +70,86 @@ O objetivo deste desafio é criar um rate limiter em Go que possa ser utilizado 
 
 - O servidor web deve responder na porta 8080.
 
+
 ## Execução do Desafio
+
+
+### Descrição
+
+
+Para a execução do desafio foi criado uma api no path /test que exibe apenas uma mensagem simples: `"message": "request successful"`. Essa api está configurada em um servidor web gin e utiliza o viper para carregar as variáveis de ambiente. 
+
+As configurações do rate limiter e da porta do servidor são realizadas nas variáveis de ambiente, que estão configuradas no arquivo `docker-compose.yaml`, presente na raiz do projeto. A seguir estão as descrições das variáveis:
+
+- **MAX_REQUESTS:** Quantidade máxima de requests por IP no período informado.
+- **BLOCK_DURATION:** Bloco de tempo para o cálculo da quantidade de requests por IP.
+- **MAX_REQUESTS_TOKEN:** Quantidade máxima de requests por TOKEN no período informado.
+- **BLOCK_DURATION_TOKEN:** Bloco de tempo para o cálculo da quantidade de requests por TOKEN.
+- **REDIS_ADDRESS:** Endereço para acesso ao REDIS
+- **REDIS_PASSWORD:** Senha utilizada para conexão com o REDIS
+- **PORT:** Porta TCP utilizada pelo WEBSERVER.
+
+### Execução da Aplicação e Dependências
+
+Para executar o sistema, basta utilizar o comando `docker-compose up --build -d` na raiz do projeto que serão geradas as imagens docker e, em seguida, os containers serão iniciados. Abaixo segue um exemplo dos containers em execução:
+
+```bash
+
+wander@bsnote283:~/desafio-rate-limiter$ docker-compose up --build -d
+[+] Building 0.8s (10/10) FINISHED                                                                                                                                                            docker:default
+ => [rate-limiter internal] load build definition from Dockerfile                                                                                          0.0s
+ => => transferring dockerfile: 243B                                                                                                                       0.0s
+ => WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 1)                                                                             0.0s
+ => [rate-limiter internal] load metadata for docker.io/library/golang:latest                                                                              0.6s
+ => [rate-limiter internal] load .dockerignore                                                                                                             0.0s
+ => => transferring context: 2B                                                                                                                            0.0s
+ => [rate-limiter builder 1/4] FROM docker.io/library/golang:latest@sha256:ad5c126b5cf501a8caef751a243bb717ec204ab1aa56dc41dc11be089fafcb4f                0.0s
+ => [rate-limiter internal] load build context                                                                                                             0.0s
+ => => transferring context: 14.25kB                                                                                                                       0.0s
+ => CACHED [rate-limiter builder 2/4] WORKDIR /app                                                                                                         0.0s
+ => CACHED [rate-limiter builder 3/4] COPY . .                                                                                                             0.0s
+ => CACHED [rate-limiter builder 4/4] RUN GOOS=linux CGO_ENABLED=0 go build -C "cmd/server" -ldflags="-w -s" -o  server .                                  0.0s
+ => CACHED [rate-limiter stage-1 1/1] COPY --from=builder /app/cmd/server .                                                                                0.0s
+ => [rate-limiter] exporting to image                                                                                                                      0.0s
+ => => exporting layers                                                                                                                                    0.0s
+ => => writing image sha256:eafdcac4e6cfb55113e7d77a69b59f1d80da176d26d40609d0db395d4e8f80e9                                                               0.0s
+ => => naming to docker.io/library/desafio-rate-limiter-rate-limiter                                                                                       0.0s
+ Container redis  Creating
+ Container redis  Created
+ Container rate-limiter  Creating
+ Container rate-limiter  Created
+ Container redis  Starting
+ Container redis  Started
+ Container rate-limiter  Starting
+ Container rate-limiter  Started
+wander@bsnote283:~/desafio-rate-limiter$ 
+wander@bsnote283:~/desafio-rate-limiter$ docker ps
+CONTAINER ID   IMAGE                               COMMAND                  CREATED         STATUS         PORTS                                       NAMES
+ee58def613b3   desafio-rate-limiter-rate-limiter   "./server"               8 seconds ago   Up 7 seconds   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp   rate-limiter
+fad9eaa73e7e   redis                               "docker-entrypoint.s…"   8 seconds ago   Up 7 seconds   0.0.0.0:6379->6379/tcp, :::6379->6379/tcp   redis
+wander@bsnote283:~/desafio-rate-limiter$ 
+
+
+```
+
+Com essa execução, são inicializados dois containers: um do redis e um do rate-limiter:
+
+
+```bash
+
+wander@bsnote283:~/desafio-rate-limiter$ docker ps
+CONTAINER ID   IMAGE                               COMMAND                  CREATED         STATUS         PORTS                                       NAMES
+ee58def613b3   desafio-rate-limiter-rate-limiter   "./server"               8 seconds ago   Up 7 seconds   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp   rate-limiter
+fad9eaa73e7e   redis                               "docker-entrypoint.s…"   8 seconds ago   Up 7 seconds   0.0.0.0:6379->6379/tcp, :::6379->6379/tcp   redis
+wander@bsnote283:~/desafio-rate-limiter$ 
+
+
+```
+
+A partir deste ponto o sistema já está disponível e os testes já podem ser realizados.
+
+
+### Testes de Funcionalidade
+
+
 

@@ -11,12 +11,13 @@ services:
     build:
       context: .
     environment:
-      MAX_REQUESTS_PER_SECOND: 5
+      MAX_REQUESTS: 5
       BLOCK_DURATION: 60
-      MAX_REQUESTS_PER_SECOND_TOKEN: 10
+      MAX_REQUESTS_TOKEN: 10
       BLOCK_DURATION_TOKEN: 60
       REDIS_ADDRESS: "redis:6379"
       REDIS_PASSWORD: "redis123"
+      PORT: ":8080"
     ports:
       - "8080:8080"
     depends_on:
