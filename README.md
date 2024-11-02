@@ -147,7 +147,7 @@ A partir deste ponto o sistema já está disponível e os testes já podem ser r
 
 Para a realização dos testes funcionais foi criado um arquivo http no caminho `test/teste.http`, permitindo a execução dos testes dentro do próprio VScode. 
 
-Neste arquivo foram inseridas duas chamadas para o endpoint `/test` da API: uma sem token e outra com o header de token `API_KEY`. Com essas duas chamadas temos a possibilidade de verificar as respostas nos dois contextos (com e sem o token). A seguir está um exemplo de execução da da primeira chamada presente no arquivo:
+Neste arquivo foram inseridas duas chamadas para o endpoint `/test` da API: uma sem token e outra com o header de token `API_KEY`. Com essas duas chamadas temos a possibilidade de verificar as respostas nos dois contextos (com e sem o token). A seguir está um exemplo de execução da primeira chamada presente no arquivo:
 
 ![teste01.png](/.img/teste01.png)
 
@@ -164,13 +164,15 @@ go install github.com/rakyll/hey@latest
 
 ```
 
-Feito isso, já é possível executar o teste de carga. Primeiramente vamos executar o teste de carga utilizando o token. Estes serão os parâmetros utilizados para executar o teste:
+Feito isso, já é possível executar o teste de carga. 
+
+Primeiramente vamos executar o teste de carga utilizando o token. Estes serão os parâmetros utilizados para executar o teste:
 
 - **-n 1000:** Número total de requisições a serem enviadas.
 - **-c 100:** Número de requisições concorrentes.
 - **-H "API_KEY: abc123":** Cabeçalho HTTP para incluir o token de acesso.
 
-A seguir está o exemplo da execução do teste com os parâmetros descritos acima:
+Abaixo segue o exemplo da execução utilizando os parâmetros descritos acima:
 
 ```bash
 
@@ -227,9 +229,7 @@ wander@bsnote283:~/desafio-rate-limiter$
 
 ```
 
-Neste exemplo de execução, a variável `MAX_REQUESTS_TOKEN` e a variável `BLOCK_DURATION_TOKEN` estavam configuradas com os valores de 100 e 60 (respectivamente) e por isso, houveram 100 respostas de código 200 e as outras 900 foram 429.
-
-Com este resultado conseguimos comprovar que o rate limiter está funcionando perfeitamente, mesmo sobre uma alta demanda.
+Neste exemplo de execução, a variável `MAX_REQUESTS_TOKEN` e a variável `BLOCK_DURATION_TOKEN` estavam configuradas com os valores de 100 e 60 (respectivamente). Por isso, houveram 100 respostas de código 200 e as outras 900 foram 429.
 
 Para executar o teste utilizando os valores por IP, basta remover o parâmentro `-H "API_KEY: abc123` do comando e executar novamente. Abaixo segue o exemplo da requisição considerando o IP:
 
@@ -290,4 +290,4 @@ wander@bsnote283:~/desafio-rate-limiter$
 
 Observe que, ao remover o header `API_KEY`, os limites utilizados para bloquear as requsições foram alterados e passaram a respeitar as variávies `MAX_REQUESTS` e `BLOCK_DURATION`, que no momento da execução dos testes estavam configuradas com os valores 20 e 60 respectivamente.
 
-Com a execução destes testes podemos confirmar que o sistema está apto a ser executado mesmo sobre alta demanda sem compromoter a funcionalidade de rate limite.
+Com a execução destes testes podemos confirmar que o sistema está apto a ser executado (mesmo sobre alta demanda) sem compromoter a funcionalidade de rate limite.
