@@ -82,9 +82,9 @@ Para a execução do desafio foi criado uma api no path /test que exibe apenas u
 As configurações do rate limiter e da porta do servidor são realizadas nas variáveis de ambiente, que estão configuradas no arquivo `docker-compose.yaml`, presente na raiz do projeto. A seguir estão as descrições das variáveis:
 
 - **MAX_REQUESTS:** Quantidade máxima de requests por IP no período informado.
-- **BLOCK_DURATION:** Bloco de tempo para o cálculo da quantidade de requests por IP.
+- **BLOCK_DURATION:** Bloco de tempo (em segundos) para o cálculo da quantidade de requests por IP.
 - **MAX_REQUESTS_TOKEN:** Quantidade máxima de requests por TOKEN no período informado.
-- **BLOCK_DURATION_TOKEN:** Bloco de tempo para o cálculo da quantidade de requests por TOKEN.
+- **BLOCK_DURATION_TOKEN:** Bloco de tempo (em segundos) para o cálculo da quantidade de requests por TOKEN.
 - **REDIS_ADDRESS:** Endereço para acesso ao REDIS
 - **REDIS_PASSWORD:** Senha utilizada para conexão com o REDIS
 - **PORT:** Porta TCP utilizada pelo WEBSERVER.
@@ -149,7 +149,7 @@ wander@bsnote283:~/desafio-rate-limiter$
 A partir deste ponto o sistema já está disponível e os testes já podem ser realizados.
 
 
-### Testes da Aplicação
+### Testes de funcionalidade da Aplicação
 
 Para a realização dos testes funcionais foi criado um arquivo http no caminho `test/teste.http` para a realização dentro do próprio VScode. Neste arquivo foram inseridas duas chamadas para o endpoint `/test` da API: uma sem token e outra com o header de token `API_KEY`. 
 
@@ -158,3 +158,142 @@ Dessa forma, para realizar os testes, basta iniciar os containers (como descrito
 ![teste01.png](/.img/teste01.png)
 
 
+
+### Testes de Carga
+
+
+Para a realização do teste de carga, utlizamos o **hey**, que é pequena ferramenta de benchmark para HTTP. Para instalar, basta executar o seguinte comando:
+
+```bash
+
+go install github.com/rakyll/hey@latest
+
+```
+
+Feito isso, já é possível executar o teste de carga. Primeiramente vamos executar o teste de carga utilizando o token. Estes serão os parâmetros utilizados para executar o teste:
+
+- **-n 1000:** Número total de requisições a serem enviadas.
+- **-c 100:** Número de requisições concorrentes.
+- **-H "API_KEY: abc123":** Cabeçalho HTTP para incluir o token de acesso.
+
+A seguir está o exemplo da execução do teste com os parâmetros descritos acima:
+
+```bash
+
+wander@bsnote283:~/desafio-rate-limiter$ hey -n 1000 -c 100 -H "API_KEY: abc123" http://localhost:8080/test
+
+Summary:
+  Total:	0.0847 secs
+  Slowest:	0.0354 secs
+  Fastest:	0.0002 secs
+  Average:	0.0077 secs
+  Requests/sec:	11803.3913
+  
+  Total data:	100400 bytes
+  Size/request:	100 bytes
+
+Response time histogram:
+  0.000 [1]	|
+  0.004 [86]	|■■■■■
+  0.007 [668]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.011 [146]	|■■■■■■■■■
+  0.014 [10]	|■
+  0.018 [2]	|
+  0.021 [24]	|■
+  0.025 [10]	|■
+  0.028 [21]	|■
+  0.032 [6]	|
+  0.035 [26]	|■■
+
+
+Latency distribution:
+  10% in 0.0040 secs
+  25% in 0.0057 secs
+  50% in 0.0061 secs
+  75% in 0.0071 secs
+  90% in 0.0107 secs
+  95% in 0.0251 secs
+  99% in 0.0341 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.0003 secs, 0.0002 secs, 0.0354 secs
+  DNS-lookup:	0.0002 secs, 0.0000 secs, 0.0039 secs
+  req write:	0.0000 secs, 0.0000 secs, 0.0007 secs
+  resp wait:	0.0074 secs, 0.0001 secs, 0.0305 secs
+  resp read:	0.0000 secs, 0.0000 secs, 0.0014 secs
+
+Status code distribution:
+  [200]	100 responses
+  [429]	900 responses
+
+
+
+wander@bsnote283:~/desafio-rate-limiter$ 
+
+
+```
+
+Neste exemplo de execução, a variável `MAX_REQUESTS_TOKEN` e a variável `BLOCK_DURATION_TOKEN` estavam configuradas com os valores de 100 e 60 (respectivamente) e por isso, houveram 100 respostas de código 200 e as outras 900 foram 429.
+
+Com este resultado conseguimos comprovar que o rate limiter está funcionando perfeitamente, mesmo sobre uma alta demanda.
+
+Para executar o teste utilizando os valores por IP, basta remover o parâmentro `-H "API_KEY: abc123` do comando e executar novamente. Abaixo segue o exemplo da requisição considerando o IP:
+
+```bash
+
+wander@bsnote283:~/desafio-rate-limiter$ hey -n 1000 -c 100 http://localhost:8080/test
+
+Summary:
+  Total:	0.0702 secs
+  Slowest:	0.0145 secs
+  Fastest:	0.0002 secs
+  Average:	0.0065 secs
+  Requests/sec:	14245.5297
+  
+  Total data:	106480 bytes
+  Size/request:	106 bytes
+
+Response time histogram:
+  0.000 [1]	|
+  0.002 [10]	|■
+  0.003 [2]	|
+  0.004 [1]	|
+  0.006 [229]	|■■■■■■■■■■■■■■
+  0.007 [656]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  0.009 [27]	|■■
+  0.010 [14]	|■
+  0.012 [20]	|■
+  0.013 [30]	|■■
+  0.015 [10]	|■
+
+
+Latency distribution:
+  10% in 0.0057 secs
+  25% in 0.0059 secs
+  50% in 0.0062 secs
+  75% in 0.0066 secs
+  90% in 0.0074 secs
+  95% in 0.0112 secs
+  99% in 0.0134 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.0003 secs, 0.0002 secs, 0.0145 secs
+  DNS-lookup:	0.0002 secs, 0.0000 secs, 0.0040 secs
+  req write:	0.0001 secs, 0.0000 secs, 0.0017 secs
+  resp wait:	0.0061 secs, 0.0001 secs, 0.0127 secs
+  resp read:	0.0000 secs, 0.0000 secs, 0.0010 secs
+
+Status code distribution:
+  [200]	20 responses
+  [429]	980 responses
+
+
+
+wander@bsnote283:~/desafio-rate-limiter$ 
+
+
+```
+
+Observe que, ao remover o header `API_KEY`, os limites utilizados para bloquear as requsições foram alterados e passaram a respeitar as variávies `MAX_REQUESTS` e `BLOCK_DURATION`, que no momento da execução dos testes estavam configuradas com os valores 20 e 60 respectivamente.
+
+Com a execução destes testes podemos confirmar que o sistema está apto a ser executado mesmo sobre alta demanda sem compromoter a funcionalidade de rate limite.
