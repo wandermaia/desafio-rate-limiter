@@ -149,7 +149,12 @@ wander@bsnote283:~/desafio-rate-limiter$
 A partir deste ponto o sistema já está disponível e os testes já podem ser realizados.
 
 
-### Testes de Funcionalidade
+### Testes da Aplicação
 
+Para a realização dos testes funcionais foi criado um arquivo http no caminho `test/teste.http` para a realização dentro do próprio VScode. Neste arquivo foram inseridas duas chamadas para o endpoint `/test` da API: uma sem token e outra com o header de token `API_KEY`. 
+
+Dessa forma, para realizar os testes, basta iniciar os containers (como descrito nos passos anteriores) e executar as chamadas. A seguir está um exemplo de execução das execuções dessas chamadas presentes no arquivo:
+
+![teste01.png](/.img/teste01.png)
 
 
