@@ -77,7 +77,7 @@ O objetivo deste desafio é criar um rate limiter em Go que possa ser utilizado 
 ### Descrição
 
 
-Para a execução do desafio foi criado uma api no path /test que exibe apenas uma mensagem simples: `"message": "request successful"`. Essa api está configurada em um servidor web gin e utiliza o viper para carregar as variáveis de ambiente. 
+Para a execução do desafio foi criado uma api no path `/test` que exibe apenas uma mensagem simples: `"message": "request successful"`. Essa api está configurada em um servidor web gin e utiliza o viper para carregar as variáveis de ambiente. 
 
 As configurações do rate limiter e da porta do servidor são realizadas nas variáveis de ambiente, que estão configuradas no arquivo `docker-compose.yaml`, presente na raiz do projeto. A seguir estão as descrições das variáveis:
 
@@ -123,12 +123,6 @@ wander@bsnote283:~/desafio-rate-limiter$ docker-compose up --build -d
  Container rate-limiter  Starting
  Container rate-limiter  Started
 wander@bsnote283:~/desafio-rate-limiter$ 
-wander@bsnote283:~/desafio-rate-limiter$ docker ps
-CONTAINER ID   IMAGE                               COMMAND                  CREATED         STATUS         PORTS                                       NAMES
-ee58def613b3   desafio-rate-limiter-rate-limiter   "./server"               8 seconds ago   Up 7 seconds   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp   rate-limiter
-fad9eaa73e7e   redis                               "docker-entrypoint.s…"   8 seconds ago   Up 7 seconds   0.0.0.0:6379->6379/tcp, :::6379->6379/tcp   redis
-wander@bsnote283:~/desafio-rate-limiter$ 
-
 
 ```
 
@@ -151,9 +145,9 @@ A partir deste ponto o sistema já está disponível e os testes já podem ser r
 
 ### Testes de funcionalidade da Aplicação
 
-Para a realização dos testes funcionais foi criado um arquivo http no caminho `test/teste.http` para a realização dentro do próprio VScode. Neste arquivo foram inseridas duas chamadas para o endpoint `/test` da API: uma sem token e outra com o header de token `API_KEY`. 
+Para a realização dos testes funcionais foi criado um arquivo http no caminho `test/teste.http`, permitindo a execução dos testes dentro do próprio VScode. 
 
-Dessa forma, para realizar os testes, basta iniciar os containers (como descrito nos passos anteriores) e executar as chamadas. A seguir está um exemplo de execução das execuções dessas chamadas presentes no arquivo:
+Neste arquivo foram inseridas duas chamadas para o endpoint `/test` da API: uma sem token e outra com o header de token `API_KEY`. Com essas duas chamadas temos a possibilidade de verificar as respostas nos dois contextos (com e sem o token). A seguir está um exemplo de execução da da primeira chamada presente no arquivo:
 
 ![teste01.png](/.img/teste01.png)
 
