@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"log"
+	"sync"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -10,6 +11,7 @@ import (
 
 type RedisRepository struct {
 	client *redis.Client
+	mtx    sync.Mutex
 }
 
 // Função de inicizalização do repositório do redis
@@ -18,13 +20,20 @@ func NewRedisRepository(address, password string) *RedisRepository {
 		Addr:     address,
 		Password: password,
 	})
-
+	//mutex := sync.Mutex{}
 	return &RedisRepository{client: client}
 }
 
 // Função para validar o rate limite
 func (r *RedisRepository) Allow(ip string, token string, maxRequests int, duration time.Duration) bool {
+
+	// Pegando o contexto
 	ctx := context.Background()
+
+	// Bloqueando para evitar reace condition
+	r.mtx.Lock()
+	defer r.mtx.Unlock()
+
 	key := "rate_limiter:" + ip
 	if token != "" {
 		key = "rate_limiter:token:" + token

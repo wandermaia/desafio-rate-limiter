@@ -16,12 +16,13 @@ func main() {
 	// Carregando as variáveis de ambiente
 	viper.AutomaticEnv()
 
-	// viper.Set("MAX_REQUESTS", 5)
+	// viper.Set("MAX_REQUESTS", 20)
 	// viper.Set("BLOCK_DURATION", 60)
-	// viper.Set("MAX_REQUESTS_TOKEN", 10)
+	// viper.Set("MAX_REQUESTS_TOKEN", 100)
 	// viper.Set("BLOCK_DURATION_TOKEN", 60)
 	// viper.Set("REDIS_ADDRESS", "localhost:6379")
 	// viper.Set("REDIS_PASSWORD", "redis123")
+	// viper.Set("PORT", ":8080")
 
 	// Criação do repo, stratagey e limiter
 	repo := repository.NewRedisRepository(viper.GetString("REDIS_ADDRESS"), viper.GetString("REDIS_PASSWORD"))
