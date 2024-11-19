@@ -151,6 +151,50 @@ Neste arquivo foram inseridas duas chamadas para o endpoint `/test` da API: uma 
 
 ![teste01.png](/.img/teste01.png)
 
+### Testes Automatizados
+
+Para a execução dos testes automatizados, foi criado o arquivo `internal/middleware/test/rate_limiter_test.go`. Assim, basta executar o seguinte comando `go test ./internal/middleware/test -v` a partir do projeto para a realização dos testes. Abaixo segue o exemplo da execução:
+
+> **OBSERVAÇÃO:**
+>
+> - Para a execução do teste automatizado, é **OBRIGATÓRIO** que o container do REDIS esteja em execução.
+>
+
+```bash
+
+wander@bsnote283:~desafio-rate-limiter$ go test ./internal/middleware/test -v
+=== RUN   TestRateLimiterMiddleware
+2024/11/19 14:02:10 Flush Status Redis: flushall: OK
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /test                     --> github.com/wandermaia/desafio-rate-limiter/internal/middleware/test.setupRouter.func1 (4 handlers)
+=== RUN   TestRateLimiterMiddleware/Requests_abaixo_do_limite_(IP)
+[GIN] 2024/11/19 - 14:02:10 | 200 |     209.807µs |                 | GET      "/test"
+[GIN] 2024/11/19 - 14:02:10 | 200 |      80.243µs |                 | GET      "/test"
+=== RUN   TestRateLimiterMiddleware/Requests_acima_do_limite_(IP)
+[GIN] 2024/11/19 - 14:02:10 | 429 |      61.296µs |                 | GET      "/test"
+=== RUN   TestRateLimiterMiddleware/Requests_abaixo_do_limite_(Token)
+[GIN] 2024/11/19 - 14:02:10 | 200 |     137.526µs |                 | GET      "/test"
+[GIN] 2024/11/19 - 14:02:10 | 200 |      76.112µs |                 | GET      "/test"
+[GIN] 2024/11/19 - 14:02:10 | 200 |      75.003µs |                 | GET      "/test"
+[GIN] 2024/11/19 - 14:02:10 | 200 |      74.545µs |                 | GET      "/test"
+[GIN] 2024/11/19 - 14:02:10 | 200 |      78.585µs |                 | GET      "/test"
+=== RUN   TestRateLimiterMiddleware/Requests_acima_do_limite_(Token)
+[GIN] 2024/11/19 - 14:02:10 | 429 |      46.291µs |                 | GET      "/test"
+--- PASS: TestRateLimiterMiddleware (0.01s)
+    --- PASS: TestRateLimiterMiddleware/Requests_abaixo_do_limite_(IP) (0.00s)
+    --- PASS: TestRateLimiterMiddleware/Requests_acima_do_limite_(IP) (0.00s)
+    --- PASS: TestRateLimiterMiddleware/Requests_abaixo_do_limite_(Token) (0.00s)
+    --- PASS: TestRateLimiterMiddleware/Requests_acima_do_limite_(Token) (0.00s)
+PASS
+ok  	github.com/wandermaia/desafio-rate-limiter/internal/middleware/test	0.015s
+wander@bsnote283:~desafio-rate-limiter$
+
+```
 
 
 ### Testes de Carga

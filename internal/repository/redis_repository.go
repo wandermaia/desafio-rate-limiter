@@ -60,7 +60,7 @@ func (r *RedisRepository) Allow(ip string, token string, maxRequests int, durati
 		return false
 	}
 
-	log.Printf("Contador redis (valor): %v, máximo de requests; %v", count, maxRequests)
+	//log.Printf("Contador redis (valor): %v, máximo de requests; %v", count, maxRequests)
 	// Se o limite foi alcançado
 	if count > maxRequests {
 		return false
@@ -76,4 +76,15 @@ func (r *RedisRepository) Allow(ip string, token string, maxRequests int, durati
 	// Retorna true se ainda não houver alcançado o limite
 	return true
 
+}
+
+func (r *RedisRepository) FlushRedis() bool {
+
+	err := r.client.FlushAll(context.Background())
+	if err != nil {
+		log.Printf("Flush Status Redis: %s", err)
+		return false
+	}
+
+	return true
 }
